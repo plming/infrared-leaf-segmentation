@@ -1,9 +1,27 @@
+from array import array
 import plotly.express as px
 import numpy as np
 import matplotlib as mpl
 
 mpl.rcParams['figure.dpi'] = 150
 mpl.rcParams['font.family'] = 'Apple SD Gothic Neo'
+
+
+def load_ir_in_dat(filename: str) -> np.ndarray:
+    WIDTH = 160
+    HEIGHT = 120
+
+    with open(filename, 'rb') as file:
+        USHORT_BYTE = 2
+        bytes = file.read(HEIGHT * WIDTH * USHORT_BYTE)
+
+    ir_array = array('H')
+    ir_array.frombytes(bytes)
+
+    result = np.array(ir_array).reshape(HEIGHT, WIDTH)
+    # TODO: remove magic number
+    result = (result - 27315) / 100
+    return result
 
 
 def load_ir_in_csv(filename: str) -> np.ndarray:
