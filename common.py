@@ -3,6 +3,7 @@ from numpy import genfromtxt
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def load_ir_in_dat(filename: str) -> np.ndarray:
     WIDTH = 160
     HEIGHT = 120
@@ -47,7 +48,7 @@ def get_average_tempeature(ir: np.ndarray, mask: np.ndarray) -> float:
     return sum_temperature / num_region_pixels
 
 
-def show_histogram(ir: np.ndarray, title: str) -> None:
-    plt.hist(ir.ravel(), bins=128)
+def show_histogram(single_channel_img: np.ndarray, title: str) -> None:
+    plt.hist(single_channel_img.ravel(), bins='auto')
     plt.title(title)
     plt.show()
