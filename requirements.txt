@@ -1,0 +1,12 @@
+# core
+numpy
+jenkspy
+
+# visualization
+cv2
+opencv-python
+plotly
+
+# style guide
+autopep8
+pylint
