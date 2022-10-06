@@ -1,11 +1,13 @@
 # core
 numpy
 jenkspy
+opencv-python
 
 # visualization
-cv2
-opencv-python
 plotly
+matplotlib
+
+# jupyter
 
 # style guide
 autopep8
