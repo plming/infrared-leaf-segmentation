@@ -7,8 +7,8 @@ opencv-python
 plotly
 matplotlib
 
-# jupyter
+# run jupyter
+jupyter
 
 # style guide
 autopep8
-pylint
