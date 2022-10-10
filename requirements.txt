@@ -8,7 +8,4 @@ plotly
 matplotlib
 
 # run jupyter
-jupyter
-
-# style guide
-autopep8
+ipykernel
