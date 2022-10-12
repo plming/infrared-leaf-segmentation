@@ -38,11 +38,31 @@ def load_ir_in_csv(path: str) -> ndarray:
 
 def show_ir(ir: ndarray) -> None:
     plt.imshow(ir)
+    plt.axis(False)
     plt.show()
 
 
 def show_rgb(rgb: ndarray) -> None:
     plt.imshow(rgb)
+    plt.axis(False)
+    plt.show()
+
+
+def show_images(images: list[ndarray]) -> None:
+    fig, axs = plt.subplots(1, len(images))
+
+    for i in range(len(images)):
+        dimension = len(images[i].shape)
+
+        if dimension == 2:
+            axs[i].imshow(images[i], cmap='plasma')
+        elif dimension == 3:
+            axs[i].imshow(images[i])
+        else:
+            assert False, "Unknown dimension"
+
+        axs[i].axis(False)
+
     plt.show()
 
 
