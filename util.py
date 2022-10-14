@@ -144,7 +144,7 @@ def get_leaf_with_kmeans(ir: ndarray) -> ndarray:
                       newshape=(ir.shape[0], ir.shape[1]))
 
 
-def get_accuracy(target: ndarray, predict: ndarray) -> float:
+def get_intersection_over_union(target: ndarray, predict: ndarray) -> float:
     assert target.shape == predict.shape and target.ndim == 2
     assert target.dtype == np.bool8 and predict.dtype == np.bool8
 
