@@ -5,6 +5,7 @@ import cv2
 import jenkspy
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.cluster import KMeans
 from numpy import genfromtxt, ndarray
 
 
@@ -31,7 +32,8 @@ def load_ir_in_csv(path: str) -> ndarray:
     assert os.path.splitext(path)[1] == '.csv'
 
     WIDTH = 320
-    result = genfromtxt(path, delimiter=',', skip_header=2, usecols=range(1, WIDTH + 1))
+    result = genfromtxt(path, delimiter=',', skip_header=2,
+                        usecols=range(1, WIDTH + 1))
     assert result.shape == (320, 240)
     return result
 
@@ -44,6 +46,12 @@ def show_ir(ir: ndarray) -> None:
 
 def show_rgb(rgb: ndarray) -> None:
     plt.imshow(rgb)
+    plt.axis(False)
+    plt.show()
+
+
+def show_image(image: ndarray) -> None:
+    plt.imshow(image, cmap='plasma')
     plt.axis(False)
     plt.show()
 
@@ -89,16 +97,57 @@ def load_rgb_in_jpeg(path: str) -> ndarray:
 
 
 def get_average_temperature(ir: ndarray, mask: ndarray) -> float:
-    assert len(ir.shape) == 2 and len(mask.shape) == 2
+    assert ir.ndim == 2 and mask.ndim == 2
     average_per_channels = cv2.mean(ir, mask)
     return average_per_channels[0]
 
 
-def predict_with_jenks(arr: ndarray) -> ndarray:
-    breaks = jenkspy.jenks_breaks(arr.ravel(), nb_class=2)
-    return cv2.inRange(arr, lowerb=breaks[1], upperb=breaks[2])
+def get_leaf_with_jenks(image: ndarray) -> ndarray:
+    assert image.ndim == 2
+    breaks = jenkspy.jenks_breaks(image.ravel(), nb_class=2)
+    result = np.logical_and(image >= breaks[1],
+                            image <= breaks[2])
+
+    return result
 
 
-"""
-ir -> leaf -> temperature
-"""
+def get_leaf_with_kmeans(ir: ndarray) -> ndarray:
+    assert len(ir.shape) == 2
+
+    # region add indices as feature
+    array_3d = np.zeros(shape=(ir.shape[0], ir.shape[1], 3))
+
+    for row in range(ir.shape[0]):
+        for col in range(ir.shape[1]):
+            array_3d[row][col][0] = ir[row][col]
+            array_3d[row][col][1] = row
+            array_3d[row][col][2] = col
+    # endregion
+
+    x = array_3d.reshape(-1, 3)
+    # region max-min normalization
+    x[:, 0] -= x[:, 0].min()
+    x[:, 0] /= x[:, 0].max() - x[:, 0].min()
+
+    x[:, 1] -= x[:, 1].min()
+    x[:, 1] /= x[:, 1].max() - x[:, 1].min()
+
+    x[:, 2] -= x[:, 2].min()
+    x[:, 2] /= x[:, 2].max() - x[:, 2].min()
+    # endregion
+
+    labels = KMeans(n_clusters=2).fit_predict(x)
+
+    return np.reshape(labels,
+                      newshape=(ir.shape[0], ir.shape[1]))
+
+
+def get_accuracy(target: ndarray, predict: ndarray) -> float:
+    assert target.shape == predict.shape and len(target.shape) == 2
+    # assert target.dtype == np.bool8 and predict.dtype == np.bool8
+
+    intersection = np.logical_and(target, predict)
+    union = np.logical_or(target, predict)
+    assert np.sum(intersection) <= np.sum(union)
+
+    return np.sum(intersection) / np.sum(union)
