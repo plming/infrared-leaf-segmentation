@@ -78,6 +78,17 @@ def load_rgb_in_jpeg(path: str) -> ndarray:
 
     return rgb_image
 
+def get_max_temperature(ir: ndarray, mask: ndarray) -> np.float64:
+    assert ir.shape == mask.shape and ir.ndim == 2
+    assert ir.dtype == np.float64 and mask.dtype == np.bool8
+
+    return np.max(ir[mask])
+
+def get_min_temperature(ir: ndarray, mask: ndarray) -> np.float64:
+    assert ir.shape == mask.shape and ir.ndim == 2
+    assert ir.dtype == np.float64 and mask.dtype == np.bool8
+
+    return np.min(ir[mask])
 
 def get_average_temperature(ir: ndarray, mask: ndarray) -> np.float64:
     assert ir.shape == mask.shape and ir.ndim == 2
