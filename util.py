@@ -38,40 +38,19 @@ def load_ir_in_csv(path: str) -> ndarray:
     return result
 
 
-def show_ir(ir: ndarray) -> None:
-    plt.imshow(ir)
-    plt.axis(False)
-    plt.show()
-
-
-def show_rgb(rgb: ndarray) -> None:
-    plt.imshow(rgb)
-    plt.axis(False)
-    plt.show()
-
-
-def show_image(image: ndarray) -> None:
-    plt.imshow(image, cmap='plasma')
-    plt.axis(False)
-    plt.show()
-
-
-def show_images(images: list[ndarray]) -> None:
-    fig, axs = plt.subplots(1, len(images))
-
-    for i in range(len(images)):
-        dimension = images[i].ndim
+def show_images(*images: ndarray) -> None:
+    for image in images:
+        dimension = image.ndim
 
         if dimension == 2:
-            axs[i].imshow(images[i], cmap='plasma')
+            plt.imshow(image, cmap='plasma')
         elif dimension == 3:
-            axs[i].imshow(images[i])
+            plt.imshow(image)
         else:
             assert False, "Unknown dimension"
 
-        axs[i].axis(False)
-
-    plt.show()
+        plt.axis(False)
+        plt.show()
 
 
 def get_excess_green(rgb: ndarray) -> ndarray:
