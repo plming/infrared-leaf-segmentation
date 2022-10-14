@@ -96,12 +96,11 @@ def load_rgb_in_jpeg(path: str) -> ndarray:
     return rgb_image
 
 
-def get_average_temperature(ir: ndarray, mask: ndarray) -> float:
+def get_average_temperature(ir: ndarray, mask: ndarray) -> np.float64:
     assert ir.shape == mask.shape and ir.ndim == 2
     assert ir.dtype == np.float64 and mask.dtype == np.bool8
 
-    average_per_channels = cv2.mean(ir, mask)
-    return average_per_channels[0]
+    return np.mean(ir[mask])
 
 
 def get_leaf_with_jenks(image: ndarray) -> ndarray:
