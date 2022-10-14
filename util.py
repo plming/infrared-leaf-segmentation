@@ -148,8 +148,8 @@ def get_intersection_over_union(target: ndarray, predict: ndarray) -> float:
     assert target.shape == predict.shape and target.ndim == 2
     assert target.dtype == np.bool8 and predict.dtype == np.bool8
 
-    intersection = np.logical_and(target, predict)
-    union = np.logical_or(target, predict)
-    assert np.sum(intersection) <= np.sum(union)
+    intersection = np.logical_and(target, predict).sum()
+    union = np.logical_or(target, predict).sum()
+    assert intersection <= union
 
-    return np.sum(intersection) / np.sum(union)
+    return intersection / union
