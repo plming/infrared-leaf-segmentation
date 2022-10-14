@@ -25,6 +25,7 @@ def load_ir_in_dat(path: str) -> ndarray:
 
     # TODO: fix magic number
     result = (result - 27315)/100
+    assert result.shape == (HEIGHT, WIDTH)
     return result
 
 
@@ -32,9 +33,11 @@ def load_ir_in_csv(path: str) -> ndarray:
     assert os.path.splitext(path)[1] == '.csv'
 
     WIDTH = 320
+    HEIGHT = 240
+
     result = genfromtxt(path, delimiter=',', skip_header=2,
                         usecols=range(1, WIDTH + 1))
-    assert result.shape == (320, 240)
+    assert result.shape == (HEIGHT, WIDTH)
     return result
 
 
@@ -68,6 +71,7 @@ def load_rgb_in_jpeg(path: str) -> ndarray:
     HEIGHT = 120
 
     rgb_image = cv2.imread(path)
+    rgb_image = cv2.cvtColor(rgb_image, cv2.COLOR_BGR2RGB)
     rgb_image = cv2.resize(rgb_image,
                            dsize=(WIDTH, HEIGHT),
                            interpolation=cv2.INTER_AREA)
