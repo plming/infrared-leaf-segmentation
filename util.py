@@ -60,7 +60,7 @@ def show_images(images: list[ndarray]) -> None:
     fig, axs = plt.subplots(1, len(images))
 
     for i in range(len(images)):
-        dimension = len(images[i].shape)
+        dimension = images[i].ndim
 
         if dimension == 2:
             axs[i].imshow(images[i], cmap='plasma')
@@ -97,7 +97,9 @@ def load_rgb_in_jpeg(path: str) -> ndarray:
 
 
 def get_average_temperature(ir: ndarray, mask: ndarray) -> float:
-    assert ir.ndim == 2 and mask.ndim == 2
+    assert ir.shape == mask.shape and ir.ndim == 2
+    assert ir.dtype == np.float64 and mask.dtype == np.bool8
+
     average_per_channels = cv2.mean(ir, mask)
     return average_per_channels[0]
 
@@ -136,15 +138,15 @@ def get_leaf_with_kmeans(ir: ndarray) -> ndarray:
     x[:, 2] /= x[:, 2].max() - x[:, 2].min()
     # endregion
 
-    labels = KMeans(n_clusters=2).fit_predict(x)
+    labels = KMeans(n_clusters=2).fit_predict(x).astype(np.bool8)
 
     return np.reshape(labels,
                       newshape=(ir.shape[0], ir.shape[1]))
 
 
 def get_accuracy(target: ndarray, predict: ndarray) -> float:
-    assert target.shape == predict.shape and len(target.shape) == 2
-    # assert target.dtype == np.bool8 and predict.dtype == np.bool8
+    assert target.shape == predict.shape and target.ndim == 2
+    assert target.dtype == np.bool8 and predict.dtype == np.bool8
 
     intersection = np.logical_and(target, predict)
     union = np.logical_or(target, predict)
