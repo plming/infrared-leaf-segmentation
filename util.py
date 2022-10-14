@@ -60,8 +60,14 @@ def get_excess_green(rgb: ndarray) -> ndarray:
     exg = np.zeros(shape=rgb.shape[:-1])
 
     for row, col, _channel in np.ndindex(rgb.shape):
-        b, g, r = rgb[row][col]/rgb[row][col].sum()
-        exg[row][col] = 2*g - r - b
+        rgb_sum = rgb[row][col].sum()
+
+        if rgb_sum == 0:
+            r, g, b = 0, 0, 0
+        else:
+            r, g, b = rgb[row][col] / rgb[row][col].sum()
+            
+        exg[row][col] = 2 * g - r - b
 
     return exg
 
@@ -78,17 +84,20 @@ def load_rgb_in_jpeg(path: str) -> ndarray:
 
     return rgb_image
 
+
 def get_max_temperature(ir: ndarray, mask: ndarray) -> np.float64:
     assert ir.shape == mask.shape and ir.ndim == 2
     assert ir.dtype == np.float64 and mask.dtype == np.bool8
 
     return np.max(ir[mask])
 
+
 def get_min_temperature(ir: ndarray, mask: ndarray) -> np.float64:
     assert ir.shape == mask.shape and ir.ndim == 2
     assert ir.dtype == np.float64 and mask.dtype == np.bool8
 
     return np.min(ir[mask])
+
 
 def get_average_temperature(ir: ndarray, mask: ndarray) -> np.float64:
     assert ir.shape == mask.shape and ir.ndim == 2
