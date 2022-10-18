@@ -1,5 +1,6 @@
 import os
 from array import array
+from typing import Optional
 
 import cv2
 import jenkspy
@@ -56,7 +57,20 @@ def show_images(*images: ndarray) -> None:
         plt.show()
 
 
+def show_histogram(single_channel_image: ndarray, title: Optional[str] = None) -> None:
+    assert single_channel_image.ndim == 2
+    assert single_channel_image.dtype == np.float64
+
+    plt.hist(single_channel_image.ravel(), bins=256)
+    if title is not None:
+        plt.title(title)
+    plt.show()
+
+
 def get_excess_green(rgb: ndarray) -> ndarray:
+    assert rgb.ndim == 3
+    assert rgb.dtype == np.uint8
+
     exg = np.zeros(shape=rgb.shape[:-1])
 
     for row, col, _channel in np.ndindex(rgb.shape):
@@ -65,8 +79,8 @@ def get_excess_green(rgb: ndarray) -> ndarray:
         if rgb_sum == 0:
             r, g, b = 0, 0, 0
         else:
-            r, g, b = rgb[row][col] / rgb[row][col].sum()
-            
+            r, g, b = rgb[row][col] / rgb_sum
+
         exg[row][col] = 2 * g - r - b
 
     return exg
@@ -108,6 +122,8 @@ def get_average_temperature(ir: ndarray, mask: ndarray) -> np.float64:
 
 def get_leaf_with_jenks(image: ndarray) -> ndarray:
     assert image.ndim == 2
+    assert image.dtype == np.float64
+
     breaks = jenkspy.jenks_breaks(image.ravel(), nb_class=2)
     result = np.logical_and(image >= breaks[1],
                             image <= breaks[2])
@@ -116,7 +132,8 @@ def get_leaf_with_jenks(image: ndarray) -> ndarray:
 
 
 def get_leaf_with_kmeans(ir: ndarray) -> ndarray:
-    assert len(ir.shape) == 2
+    assert ir.ndim == 2
+    assert ir.dtype == np.float64
 
     # region add indices as feature
     array_3d = np.zeros(shape=(ir.shape[0], ir.shape[1], 3))
