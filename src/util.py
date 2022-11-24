@@ -37,8 +37,11 @@ def load_ir_in_csv(path: str) -> NDArray[np.float64]:
     WIDTH = 320
     HEIGHT = 240
 
-    result = genfromtxt(path, delimiter=',', skip_header=2,
+    result = genfromtxt(path,
+                        delimiter=',',
+                        skip_header=2,
                         usecols=range(1, WIDTH + 1))
+
     assert result.shape == (HEIGHT, WIDTH)
     return result
 
@@ -60,7 +63,6 @@ def show_images(*images: ndarray) -> None:
 
 def show_histogram(single_channel_image: ndarray, title: Optional[str] = None) -> None:
     assert single_channel_image.ndim == 2
-    assert single_channel_image.dtype == np.float64
 
     plt.hist(single_channel_image.ravel(), bins=256)
     if title is not None:
@@ -102,28 +104,27 @@ def load_rgb_in_jpeg(path: str) -> ndarray:
 
 def get_max_temperature(ir: ndarray, mask: ndarray) -> float:
     assert ir.shape == mask.shape and ir.ndim == 2
-    assert ir.dtype == np.float64 and mask.dtype == np.bool8
+    assert mask.dtype == np.bool8
 
     return np.max(ir[mask])
 
 
 def get_min_temperature(ir: ndarray, mask: ndarray) -> float:
     assert ir.shape == mask.shape and ir.ndim == 2
-    assert ir.dtype == np.float64 and mask.dtype == np.bool8
+    assert mask.dtype == np.bool8
 
     return np.min(ir[mask])
 
 
 def get_average_temperature(ir: ndarray, mask: ndarray) -> float:
     assert ir.shape == mask.shape and ir.ndim == 2
-    assert ir.dtype == np.float64 and mask.dtype == np.bool8
+    assert mask.dtype == np.bool8
 
     return np.mean(ir[mask])
 
 
 def get_leaf_by_jenks(image: ndarray) -> ndarray:
     assert image.ndim == 2
-    assert image.dtype == np.float64
 
     breaks = jenkspy.jenks_breaks(image.ravel(), nb_class=2)
     result = np.logical_and(image >= breaks[1],
@@ -134,7 +135,6 @@ def get_leaf_by_jenks(image: ndarray) -> ndarray:
 
 def get_leaf_by_kmeans_with_coordination(ir: ndarray) -> ndarray:
     assert ir.ndim == 2
-    assert ir.dtype == np.float64
 
     # region add indices as feature
     array_3d = np.zeros(shape=(ir.shape[0], ir.shape[1], 3))
