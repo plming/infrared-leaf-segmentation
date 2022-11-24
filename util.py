@@ -6,12 +6,13 @@ import cv2
 import jenkspy
 import matplotlib.pyplot as plt
 import numpy as np
+from numpy.typing import NDArray
 from sklearn.cluster import KMeans
 from numpy import genfromtxt, ndarray
 
 
-def load_ir_in_dat(path: str) -> ndarray:
-    assert os.path.splitext(path)[1] == '.dat'
+def load_ir_in_dat(path: str) -> NDArray:
+    assert os.path.splitext(path)[-1] == '.dat'
 
     WIDTH = 160
     HEIGHT = 120
@@ -22,15 +23,15 @@ def load_ir_in_dat(path: str) -> ndarray:
 
     ir_array = array('H', byte_stream)
 
-    result = np.array(ir_array).reshape(HEIGHT, WIDTH)
+    result: ndarray = np.array(ir_array).reshape(HEIGHT, WIDTH)
 
-    # TODO: fix magic number
-    result = (result - 27315)/100
-    assert result.shape == (HEIGHT, WIDTH)
+    divisor = np.max(result) - np.min(result)
+    result = (result - np.min(result))/divisor*255
+    result = result.astype(np.uint8)
     return result
 
 
-def load_ir_in_csv(path: str) -> ndarray:
+def load_ir_in_csv(path: str) -> NDArray[np.float64]:
     assert os.path.splitext(path)[1] == '.csv'
 
     WIDTH = 320
@@ -79,9 +80,9 @@ def get_excess_green(rgb: ndarray) -> ndarray:
         if rgb_sum == 0:
             r, g, b = 0, 0, 0
         else:
-            r, g, b = rgb[row][col] / rgb_sum
+            r, g, b = rgb[row][col]/rgb_sum
 
-        exg[row][col] = 2 * g - r - b
+        exg[row][col] = 2*g - r - b
 
     return exg
 
@@ -99,28 +100,28 @@ def load_rgb_in_jpeg(path: str) -> ndarray:
     return rgb_image
 
 
-def get_max_temperature(ir: ndarray, mask: ndarray) -> np.float64:
+def get_max_temperature(ir: ndarray, mask: ndarray) -> float:
     assert ir.shape == mask.shape and ir.ndim == 2
     assert ir.dtype == np.float64 and mask.dtype == np.bool8
 
     return np.max(ir[mask])
 
 
-def get_min_temperature(ir: ndarray, mask: ndarray) -> np.float64:
+def get_min_temperature(ir: ndarray, mask: ndarray) -> float:
     assert ir.shape == mask.shape and ir.ndim == 2
     assert ir.dtype == np.float64 and mask.dtype == np.bool8
 
     return np.min(ir[mask])
 
 
-def get_average_temperature(ir: ndarray, mask: ndarray) -> np.float64:
+def get_average_temperature(ir: ndarray, mask: ndarray) -> float:
     assert ir.shape == mask.shape and ir.ndim == 2
     assert ir.dtype == np.float64 and mask.dtype == np.bool8
 
     return np.mean(ir[mask])
 
 
-def get_leaf_with_jenks(image: ndarray) -> ndarray:
+def get_leaf_by_jenks(image: ndarray) -> ndarray:
     assert image.ndim == 2
     assert image.dtype == np.float64
 
@@ -131,7 +132,7 @@ def get_leaf_with_jenks(image: ndarray) -> ndarray:
     return result
 
 
-def get_leaf_with_kmeans(ir: ndarray) -> ndarray:
+def get_leaf_by_kmeans_with_coordination(ir: ndarray) -> ndarray:
     assert ir.ndim == 2
     assert ir.dtype == np.float64
 
@@ -163,6 +164,16 @@ def get_leaf_with_kmeans(ir: ndarray) -> ndarray:
                       newshape=(ir.shape[0], ir.shape[1]))
 
 
+def get_masked_image(rgb: ndarray, mask: ndarray) -> ndarray:
+    # FIXME: not works. think about how to apply 2d mask at rgb(3d) image
+    assert rgb.ndim == 3
+    assert rgb.dtype == np.uint8
+    assert mask.ndim == 2
+    assert mask.dtype == np.bool8
+
+    return rgb[mask]
+
+
 def get_intersection_over_union(target: ndarray, predict: ndarray) -> float:
     assert target.shape == predict.shape and target.ndim == 2
     assert target.dtype == np.bool8 and predict.dtype == np.bool8
@@ -171,4 +182,4 @@ def get_intersection_over_union(target: ndarray, predict: ndarray) -> float:
     union = np.logical_or(target, predict).sum()
     assert intersection <= union
 
-    return intersection / union
+    return intersection/union

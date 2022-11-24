@@ -1,11 +1,13 @@
 # core
-numpy
-jenkspy
-opencv-python
+numpy~=1.23.0
+jenkspy~=0.2.0
+opencv-python~=4.5.5.64
+scikit-learn~=1.1.1
 
 # visualization
 plotly
-matplotlib
+matplotlib~=3.5.2
 
 # run jupyter
 ipykernel
+
