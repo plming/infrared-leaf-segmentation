@@ -1,3 +1,4 @@
+import visualization
 from src import util
 
 # region load images
@@ -5,18 +6,16 @@ ir_image = util.load_ir_in_dat('./ginseng-ir/irimage_20220728_0903.dat')
 rgb_image = util.load_rgb_in_jpeg('./ginseng-rgb/1.jpeg')
 # endregion
 
-util.show_images(ir_image, rgb_image)
-
-util.show_histogram(ir_image, "histogram for IR image")
-
 exg = util.get_excess_green(rgb_image)
 label = util.get_leaf_by_jenks(exg)
-
-util.show_images(exg, label)
-
 predict = util.get_leaf_by_jenks(ir_image)
 
-util.show_images(ir_image, predict, label)
+visualization.show_image(ir_image, 'IR image')
+visualization.show_image(rgb_image, 'RGB image')
+visualization.show_histogram(ir_image, "IR histogram")
+visualization.show_image(exg, 'EXG image')
+visualization.show_image(label, 'Label image')
+visualization.show_image(predict, 'Predict image')
 
 accuracy = util.get_intersection_over_union(label, predict)
 print(f"정확도(IOU, %): {accuracy*100:.2f}")
