@@ -63,7 +63,7 @@ def get_excess_green(rgb: ndarray) -> ndarray:
     return exg
 
 
-def load_rgb_in_jpeg(path: str) -> ndarray:
+def load_rgb_in_jpg(path: str) -> ndarray:
     WIDTH = 160
     HEIGHT = 120
 
@@ -104,7 +104,7 @@ def get_leaf_by_jenks(image: ndarray) -> ndarray:
     result = np.logical_and(image >= breaks[1],
                             image <= breaks[2])
 
-    return result
+    return result.astype(np.bool8)
 
 
 def get_leaf_by_kmeans_with_coordination(ir: ndarray) -> ndarray:
@@ -157,3 +157,17 @@ def get_intersection_over_union(target: ndarray, predict: ndarray) -> float:
     assert intersection <= union
 
     return intersection/union
+
+
+def crop_img_from_center(img, offset_x, offset_y, cropx, cropy):
+    assert img.ndim == 3
+
+    y, x, _ = img.shape
+    start_x = x//2 - (cropx//2) + offset_x
+    start_y = y//2 - (cropy//2) + offset_y
+
+    # clamp start_x and start_y in positive range
+    start_x = max(0, start_x)
+    start_y = max(0, start_y)
+
+    return img[start_y:start_y + cropy, start_x:start_x + cropx]
