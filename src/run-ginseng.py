@@ -3,6 +3,9 @@ import numpy as np
 
 import visualization
 import util
+from jenks_model import JenksModel
+
+jenks = JenksModel()
 
 
 def preprocess(image):
@@ -43,11 +46,11 @@ preprocessed = preprocess(ir_image.copy())
 
 # region create label(ground truth) image
 exg = util.get_excess_green(rgb_image)
-label = util.get_leaf_by_jenks(exg)
+label = jenks.predict(exg)
 # endregion
 
-predict = util.get_leaf_by_jenks(ir_image)
-heuristic = util.get_leaf_by_jenks(preprocessed)
+predict = jenks.predict(ir_image)
+heuristic = jenks.predict(preprocessed)
 visualization.show_image(heuristic, "heuristic")
 
 predict = np.bitwise_and(predict, heuristic).astype(np.bool8)

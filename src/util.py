@@ -2,7 +2,6 @@ import os
 from array import array
 
 import cv2
-import jenkspy
 import numpy as np
 from numpy.typing import NDArray
 from sklearn.cluster import KMeans
@@ -95,16 +94,6 @@ def get_average_temperature(ir: ndarray, mask: ndarray) -> float:
     assert mask.dtype == np.bool8
 
     return np.mean(ir[mask])
-
-
-def get_leaf_by_jenks(image: ndarray) -> ndarray:
-    assert image.ndim == 2
-
-    breaks = jenkspy.jenks_breaks(image.ravel(), nb_class=2)
-    result = np.logical_and(image >= breaks[1],
-                            image <= breaks[2])
-
-    return result.astype(np.bool8)
 
 
 def get_leaf_by_kmeans_with_coordination(ir: ndarray) -> ndarray:
