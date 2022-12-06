@@ -18,21 +18,6 @@ def show_image(image: NDArray, title: str) -> None:
     plt.show()
 
 
-def show_images(*images: ndarray) -> None:
-    for image in images:
-        dimension = image.ndim
-
-        if dimension == 2:
-            plt.imshow(image, cmap='plasma')
-        elif dimension == 3:
-            plt.imshow(image)
-        else:
-            assert False, "Unknown dimension"
-
-        plt.axis(False)
-        plt.show()
-
-
 def show_histogram(single_channel_image: ndarray, title: Optional[str] = None) -> None:
     assert single_channel_image.ndim == 2
 

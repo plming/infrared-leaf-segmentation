@@ -16,14 +16,14 @@ def load_ir_in_dat(path: str) -> NDArray:
 
     with open(path, 'rb') as file:
         USHORT_BYTE = 2
-        byte_stream = file.read(HEIGHT*WIDTH*USHORT_BYTE)
+        byte_stream = file.read(HEIGHT * WIDTH * USHORT_BYTE)
 
     ir_array = array('H', byte_stream)
 
     result: ndarray = np.array(ir_array).reshape(HEIGHT, WIDTH)
 
     divisor = np.max(result) - np.min(result)
-    result = (result - np.min(result))/divisor*255
+    result = (result - np.min(result)) / divisor * 255
     result = result.astype(np.uint8)
     return result
 
@@ -55,9 +55,9 @@ def get_excess_green(rgb: ndarray) -> ndarray:
         if rgb_sum == 0:
             r, g, b = 0, 0, 0
         else:
-            r, g, b = rgb[row][col]/rgb_sum
+            r, g, b = rgb[row][col] / rgb_sum
 
-        exg[row][col] = 2*g - r - b
+        exg[row][col] = 2 * g - r - b
 
     return exg
 
@@ -137,23 +137,12 @@ def get_masked_image(rgb: ndarray, mask: ndarray) -> ndarray:
     return rgb[mask]
 
 
-def get_intersection_over_union(target: ndarray, predict: ndarray) -> float:
-    assert target.shape == predict.shape and target.ndim == 2
-    assert target.dtype == np.bool8 and predict.dtype == np.bool8
-
-    intersection = np.logical_and(target, predict).sum()
-    union = np.logical_or(target, predict).sum()
-    assert intersection <= union
-
-    return intersection/union
-
-
 def crop_img_from_center(img, offset_x, offset_y, cropx, cropy):
     assert img.ndim == 3
 
     y, x, _ = img.shape
-    start_x = x//2 - (cropx//2) + offset_x
-    start_y = y//2 - (cropy//2) + offset_y
+    start_x = x // 2 - (cropx // 2) + offset_x
+    start_y = y // 2 - (cropy // 2) + offset_y
 
     # clamp start_x and start_y in positive range
     start_x = max(0, start_x)

@@ -1,10 +1,13 @@
-from model import Model
-from numpy import logical_and
 from jenkspy import jenks_breaks
+from numpy import logical_and
+
+from src.ir_image import IrImage
+from src.model import Model
 
 
 class JenksModel(Model):
-    def predict(self, x):
+    def predict(self, x: IrImage):
+        x = x.image
         assert x.ndim == 2
 
         breaks = jenks_breaks(x.ravel(), nb_class=2)
