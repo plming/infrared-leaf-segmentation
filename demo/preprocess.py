@@ -24,7 +24,7 @@ print(f"iou: {intersection_over_union(predicted, rgb.label) * 100:.2f}")
 visualization.show_image(ir.image, "without preprocessing")
 from jenkspy import jenks_breaks
 
-breaks = jenks_breaks(preprocessed.flatten(), nb_class=2)
+breaks = jenks_breaks(preprocessed.flatten(), n_classes=2)
 predicted = np.logical_and(preprocessed >= breaks[1], preprocessed <= breaks[2]).astype(np.bool_)
 print("With preprocessing")
 print(f"pa: {pixel_accuracy(predicted, rgb.label) * 100:.2f}")

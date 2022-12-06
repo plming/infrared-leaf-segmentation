@@ -10,7 +10,7 @@ class JenksModel(Model):
         x = x.image
         assert x.ndim == 2
 
-        breaks = jenks_breaks(x.ravel(), nb_class=2)
+        breaks = jenks_breaks(x.ravel(), n_classes=2)
         result = logical_and(x >= breaks[1], x <= breaks[2])
 
         return result.astype(bool)

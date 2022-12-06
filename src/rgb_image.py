@@ -31,7 +31,7 @@ class RgbImage:
             exg[row][col] = 2 * g - r - b
         # endregion
 
-        breaks = jenks_breaks(exg.ravel(), nb_class=2)
+        breaks = jenks_breaks(exg.ravel(), n_classes=2)
         result = np.logical_and(exg >= breaks[1], exg <= breaks[2])
 
         return result
