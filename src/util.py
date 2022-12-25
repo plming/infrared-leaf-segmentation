@@ -43,25 +43,6 @@ def load_ir_in_csv(path: str) -> NDArray[np.float64]:
     return result
 
 
-def get_excess_green(rgb: ndarray) -> ndarray:
-    assert rgb.ndim == 3
-    assert rgb.dtype == np.uint8
-
-    exg = np.zeros(shape=rgb.shape[:-1])
-
-    for row, col, _channel in np.ndindex(rgb.shape):
-        rgb_sum = rgb[row][col].sum()
-
-        if rgb_sum == 0:
-            r, g, b = 0, 0, 0
-        else:
-            r, g, b = rgb[row][col] / rgb_sum
-
-        exg[row][col] = 2 * g - r - b
-
-    return exg
-
-
 def load_rgb_in_jpg(path: str) -> ndarray:
     WIDTH = 160
     HEIGHT = 120
