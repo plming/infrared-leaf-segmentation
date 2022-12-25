@@ -1,4 +1,4 @@
-# infrared-image-lab
+# infrared-leaf-segmentation
 
 ## Introduction
 
@@ -8,3 +8,9 @@
 
 * 컬러 이미지는 BGR이 아닌 RGB 포맷으로 유지한다.
 * opencv-python 패키지 버전 변경하지 않는다.(Pycharm의 suggestion 기능이 작동하지 않음)
+
+## Idea notes
+
+* Watershed
+* Graph cut(GrabCut)
+* Neural Network
