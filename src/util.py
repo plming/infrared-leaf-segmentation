@@ -3,9 +3,9 @@ from array import array
 
 import cv2
 import numpy as np
+from numpy import genfromtxt, ndarray
 from numpy.typing import NDArray
 from sklearn.cluster import KMeans
-from numpy import genfromtxt, ndarray
 
 
 def load_ir_in_dat(path: str) -> NDArray:
@@ -67,7 +67,6 @@ def load_rgb_in_jpg(path: str) -> ndarray:
     HEIGHT = 120
 
     rgb_image = cv2.imread(path)
-    rgb_image = cv2.cvtColor(rgb_image, cv2.COLOR_BGR2RGB)
     rgb_image = cv2.resize(rgb_image,
                            dsize=(WIDTH, HEIGHT),
                            interpolation=cv2.INTER_AREA)

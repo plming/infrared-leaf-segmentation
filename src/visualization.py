@@ -1,6 +1,7 @@
 from typing import Optional
 
 import matplotlib.pyplot as plt
+from cv2 import cvtColor, COLOR_BGR2RGB
 from numpy import ndarray
 from numpy.typing import NDArray
 
@@ -9,7 +10,7 @@ def show_image(image: NDArray, title: str) -> None:
     if image.ndim == 2:
         plt.imshow(image, cmap='plasma')
     elif image.ndim == 3:
-        plt.imshow(image)
+        plt.imshow(cvtColor(image, COLOR_BGR2RGB))
     else:
         assert False, "Unknown dimension"
 

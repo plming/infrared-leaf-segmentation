@@ -6,7 +6,7 @@
 
 ## Convention
 
-* 컬러 이미지는 BGR이 아닌 RGB 포맷으로 유지한다.
+* 컬러 이미지의 채널 순서는 RGB가 아닌 BGR로 한다.(ex. Red == [0, 0, 255])
 * opencv-python 패키지 버전 변경하지 않는다.(Pycharm의 suggestion 기능이 작동하지 않음)
 
 ## Idea notes

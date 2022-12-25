@@ -1,12 +1,10 @@
 from abc import ABC, abstractmethod
 
-from numpy import bool_
+from numpy import bool_, uint8
 from numpy.typing import NDArray
-
-from src.ir_image import IrImage
 
 
 class Model(ABC):
     @abstractmethod
-    def predict(self, x: IrImage) -> NDArray[bool_]:
+    def predict(self, x: NDArray[uint8]) -> NDArray[bool_]:
         pass

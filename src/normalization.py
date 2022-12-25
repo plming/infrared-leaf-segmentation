@@ -1,5 +1,5 @@
-from numpy.typing import NDArray
 import numpy as np
+from numpy.typing import NDArray
 
 
 def linear_scaling(x: NDArray, min_value: float, max_value: float) -> NDArray:
