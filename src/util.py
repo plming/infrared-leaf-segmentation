@@ -1,31 +1,10 @@
 import os
-from array import array
 
 import cv2
 import numpy as np
 from numpy import genfromtxt, ndarray
 from numpy.typing import NDArray
 from sklearn.cluster import KMeans
-
-
-def load_ir_in_dat(path: str) -> NDArray:
-    assert os.path.splitext(path)[-1] == '.dat'
-
-    WIDTH = 160
-    HEIGHT = 120
-
-    with open(path, 'rb') as file:
-        USHORT_BYTE = 2
-        byte_stream = file.read(HEIGHT * WIDTH * USHORT_BYTE)
-
-    ir_array = array('H', byte_stream)
-
-    result: ndarray = np.array(ir_array).reshape(HEIGHT, WIDTH)
-
-    divisor = np.max(result) - np.min(result)
-    result = (result - np.min(result)) / divisor * 255
-    result = result.astype(np.uint8)
-    return result
 
 
 def load_ir_in_csv(path: str) -> NDArray[np.float64]:

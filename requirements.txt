@@ -2,4 +2,4 @@ numpy==1.23.5
 scikit-learn==1.1.1
 jenkspy==0.3.2
 matplotlib==3.6.2
-opencv-python-headless==4.5.5.64
+opencv-python==4.5.5.64

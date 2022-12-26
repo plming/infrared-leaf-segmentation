@@ -1,12 +1,11 @@
 from cv2 import threshold, THRESH_BINARY, THRESH_OTSU
 
-from src.ir_image import IrImage
 from src.model import Model
 
 
 class OtsuModel(Model):
-    def predict(self, x: IrImage):
-        _thresh, mask = threshold(x.image,
+    def predict(self, x):
+        _thresh, mask = threshold(src=x,
                                   thresh=None,
                                   maxval=255,
                                   type=THRESH_BINARY + THRESH_OTSU)

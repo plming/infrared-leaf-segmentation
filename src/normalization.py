@@ -3,7 +3,7 @@ from numpy.typing import NDArray
 
 
 def linear_scaling(x: NDArray, min_value: float, max_value: float) -> NDArray:
-    result = (x - np.min(x)) * (max_value - min_value) / (np.max(x) - np.min(x)) + min_value
+    result = (x - np.min(x)) / (np.max(x) - np.min(x)) * (max_value - min_value) + min_value
     assert (np.logical_and(result >= min_value, result <= max_value).all())
 
     return result
