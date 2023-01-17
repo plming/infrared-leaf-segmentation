@@ -4,7 +4,6 @@ import cv2
 import numpy as np
 from numpy import genfromtxt, ndarray
 from numpy.typing import NDArray
-from sklearn.cluster import KMeans
 
 
 def load_ir_in_csv(path: str) -> NDArray[np.float64]:
@@ -52,38 +51,7 @@ def get_average_temperature(ir: ndarray, mask: ndarray) -> float:
     assert ir.shape == mask.shape and ir.ndim == 2
     assert mask.dtype == np.bool8
 
-    return np.mean(ir[mask])
-
-
-def get_leaf_by_kmeans_with_coordination(ir: ndarray) -> ndarray:
-    assert ir.ndim == 2
-
-    # region add indices as feature
-    array_3d = np.zeros(shape=(ir.shape[0], ir.shape[1], 3))
-
-    for row in range(ir.shape[0]):
-        for col in range(ir.shape[1]):
-            array_3d[row][col][0] = ir[row][col]
-            array_3d[row][col][1] = row
-            array_3d[row][col][2] = col
-    # endregion
-
-    x = array_3d.reshape(-1, 3)
-    # region max-min normalization
-    x[:, 0] -= x[:, 0].min()
-    x[:, 0] /= x[:, 0].max() - x[:, 0].min()
-
-    x[:, 1] -= x[:, 1].min()
-    x[:, 1] /= x[:, 1].max() - x[:, 1].min()
-
-    x[:, 2] -= x[:, 2].min()
-    x[:, 2] /= x[:, 2].max() - x[:, 2].min()
-    # endregion
-
-    labels = KMeans(n_clusters=2).fit_predict(x).astype(np.bool8)
-
-    return np.reshape(labels,
-                      newshape=(ir.shape[0], ir.shape[1]))
+    return float(np.mean(ir[mask]))
 
 
 def get_masked_image(rgb: ndarray, mask: ndarray) -> ndarray:
